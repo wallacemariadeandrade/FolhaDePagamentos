@@ -1,3 +1,4 @@
+using System;
 using FolhaDePagamentos.Core;
 using Xunit;
 
@@ -85,6 +86,28 @@ namespace FolhaDePagamentos.Tests
 
             e = PayrollDatabase.GetEmployee(empId);
             Assert.Null(e);
+        }
+
+        [Fact]
+        public void TestTimeCardTransaction()
+        {
+            int empId = 5;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Bill", "Home", 15.25);
+            t.Execute();
+            TimeCardTransaction tct = new TimeCardTransaction(
+                new DateTime(2005, 7, 31), 8.0, empId);
+            tct.Execute();
+
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+
+            PaymentClassification pc = e.Classification;
+            Assert.True(pc is HourlyClassification);
+            HourlyClassification hc = pc as HourlyClassification;
+
+            TimeCard tc = hc.GetTimeCard(new DateTime(2005, 7, 31));
+            Assert.NotNull(tc);
+            Assert.Equal(8.0, tc.Hours);
         }
     }
 }
