@@ -131,5 +131,25 @@ namespace FolhaDePagamentos.Tests
             Assert.NotNull(sr);
             Assert.Equal(300.00, sr.Amount);
         }
+
+        [Fact]
+        public void AddServiceCharge()
+        {
+            int empId = 2;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Bob", "Home", 15.25);
+            t.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            UnionAffiliation af = new UnionAffiliation();
+            e.Affiliation = af;
+            int memberId = 86; // Maxwell Smart
+            PayrollDatabase.AddUnionMember(memberId, e);
+            ServiceChargeTransaction sct = new ServiceChargeTransaction(
+                memberId, new DateTime(2005, 8, 8), 12.95);
+            sct.Execute();
+            ServiceCharge sc = af.GetServiceCharge(new DateTime(2005, 8, 8));
+            Assert.NotNull(sc);
+            Assert.Equal(12.95, sc.Amount, 3);
+        }
     }
 }

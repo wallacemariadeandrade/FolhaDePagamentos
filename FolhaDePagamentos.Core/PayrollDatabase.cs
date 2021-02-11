@@ -9,8 +9,11 @@ namespace FolhaDePagamentos.Core
     public class PayrollDatabase
     {
         private static Hashtable employees = new Hashtable();
+        private static Hashtable unionMembers = new Hashtable();
         public static void AddEmployee(int id, Employee employee) => employees[id] = employee;
         public static Employee GetEmployee(int id) => employees[id] as Employee;
         public static void DeleteEmployee(int id) => employees[id] = null;
+        public static void AddUnionMember(int memberId, Employee employee) => unionMembers[memberId] = employee;
+        public static Employee GetUnionMember(int memberId) => unionMembers[memberId] as Employee;
     }
 }
