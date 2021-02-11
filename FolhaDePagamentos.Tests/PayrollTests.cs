@@ -109,5 +109,27 @@ namespace FolhaDePagamentos.Tests
             Assert.NotNull(tc);
             Assert.Equal(8.0, tc.Hours);
         }
+
+        [Fact]
+        public void TestSalesReceiptTransaction()
+        {
+            int empId = 6;
+            AddCommissionedEmployee t = new AddCommissionedEmployee(empId, "Bob", "Home", 1500.00, 2.5);
+            t.Execute();
+            SalesReceiptTransaction srt = new SalesReceiptTransaction(
+                new DateTime(2021, 1, 10), 300.00, empId);
+            srt.Execute();
+
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+
+            PaymentClassification pc = e.Classification;
+            Assert.True(pc is CommissionedClassification);
+            CommissionedClassification cc = pc as CommissionedClassification;
+
+            SalesReceipt sr = cc.GetSalesReceipt(new DateTime(2021, 1, 10));
+            Assert.NotNull(sr);
+            Assert.Equal(300.00, sr.Amount);
+        }
     }
 }
