@@ -10,4 +10,6 @@ Esse estudo visa abordar os padrões de projetos (GOF Design Patterns) e TDD (Te
 
 :white_check_mark: Template Method
 
+:white_check_mark: Null Object
+
 :white_check_mark: Entre outros
