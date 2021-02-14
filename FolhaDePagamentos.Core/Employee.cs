@@ -13,7 +13,7 @@ namespace FolhaDePagamentos.Core
         public PaymentSchedule Schedule { get; set; }
         public PaymentMethod Method { get; set; }
         public Affiliation Affiliation { get; set; }
-        public string Name { get; }
+        public string Name { get; set; }
         public string Address { get; }
         public int EmpId { get; }
     }
