@@ -196,5 +196,44 @@ namespace FolhaDePagamentos.Tests
             PaymentSchedule ps = e.Schedule;
             Assert.True(ps is WeeklySchedule);
         }
+
+        [Fact]
+        public void TestChangeSalariedTransaction()
+        {
+            int empId = 11;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Will", "Home", 18.90);
+            t.Execute();
+            ChangeSalariedTransaction cst = new ChangeSalariedTransaction(empId, 1950.00);
+            cst.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            PaymentClassification pc = e.Classification;
+            Assert.NotNull(pc);
+            Assert.True(pc is SalariedClassification);
+            SalariedClassification sc = pc as SalariedClassification;
+            Assert.Equal(1950.00, sc.Salary, 3);
+            PaymentSchedule ps = e.Schedule;
+            Assert.True(ps is MonthlySchedule);
+        }
+
+        [Fact]
+        public void TestChangeCommissionedTransaction()
+        {
+            int empId = 15;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Bob", "Home", 15.25);
+            t.Execute();
+            ChangeCommissionedTransaction cct = new ChangeCommissionedTransaction(empId, 1600.00, 12.00);
+            cct.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            PaymentClassification pc = e.Classification;
+            Assert.NotNull(pc);
+            Assert.True(pc is CommissionedClassification);
+            CommissionedClassification cc = pc as CommissionedClassification;
+            Assert.Equal(1600.00, cc.Salary, 3);
+            Assert.Equal(12.00, cc.CommissionRate, 3);
+            PaymentSchedule ps = e.Schedule;
+            Assert.True(ps is BiweeklySchedule);
+        }
     }
 }
