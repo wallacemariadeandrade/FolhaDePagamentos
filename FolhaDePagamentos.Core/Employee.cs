@@ -14,7 +14,7 @@ namespace FolhaDePagamentos.Core
         public PaymentMethod Method { get; set; }
         public Affiliation Affiliation { get; set; }
         public string Name { get; set; }
-        public string Address { get; }
+        public string Address { get; set; }
         public int EmpId { get; }
     }
 }

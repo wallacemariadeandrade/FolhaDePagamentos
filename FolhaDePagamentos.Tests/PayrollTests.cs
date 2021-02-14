@@ -164,5 +164,18 @@ namespace FolhaDePagamentos.Tests
             Assert.NotNull(e);
             Assert.Equal("Bob", e.Name);
         }
+
+        [Fact]
+        public void TestChangeAddressTransaction()
+        {   
+            int empId = 3;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Bob", "Home", 15.25);
+            t.Execute();
+            ChangeAddressTransaction cat = new ChangeAddressTransaction(empId, "Company");
+            cat.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            Assert.Equal("Company", e.Address);
+        }
     }
 }
