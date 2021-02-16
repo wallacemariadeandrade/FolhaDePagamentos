@@ -235,5 +235,54 @@ namespace FolhaDePagamentos.Tests
             PaymentSchedule ps = e.Schedule;
             Assert.True(ps is BiweeklySchedule);
         }
+
+        [Fact]
+        public void TestChangeMailTransaction()
+        {
+            int empId = 7;
+            AddSalariedEmployee t = new AddSalariedEmployee(empId, "Bob", "Home", 1000.00);
+            t.Execute();
+            ChangeMailTransaction cmt = new ChangeMailTransaction(empId);
+            cmt.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            PaymentMethod pm = e.Method;
+            Assert.True(pm is MailMethod);
+        }
+
+        [Fact]
+        public void TestChangeDirectTransaction()
+        {
+            int empId = 77;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Will", "Company", 23.90);
+            t.Execute();
+            ChangeDirectTransaction cmt = new ChangeDirectTransaction(empId);
+            cmt.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            PaymentMethod pm = e.Method;
+            Assert.True(pm is DirectMethod);
+        }
+
+        [Fact]
+        public void TestChangeHoldTransaction()
+        {
+            int empId = 26;
+            AddCommissionedEmployee t = new AddCommissionedEmployee(empId, "Bill", "Home", 2800.00, 1.5);
+            t.Execute();
+            ChangeDirectTransaction cmt = new ChangeDirectTransaction(empId);
+            cmt.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            PaymentMethod pm = e.Method;
+            Assert.True(pm is DirectMethod);
+            
+            ChangeHoldTransaction cht = new ChangeHoldTransaction(empId);
+            cht.Execute();
+            e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            pm = e.Method;
+            Assert.True(pm is HoldMethod);
+        }
     }
 }
