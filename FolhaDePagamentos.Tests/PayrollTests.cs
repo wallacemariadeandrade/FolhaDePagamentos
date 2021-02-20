@@ -284,5 +284,26 @@ namespace FolhaDePagamentos.Tests
             pm = e.Method;
             Assert.True(pm is HoldMethod);
         }
+
+        [Fact]
+        public void ChangeUnionMember()
+        {
+            int empId = 8;
+            AddHourlyEmployee t = new AddHourlyEmployee(empId, "Bill", "Home", 15.25);
+            t.Execute();
+            int memberId = 7743;
+            ChangeMemberTransaction cmt = new ChangeMemberTransaction(empId, memberId, 99.42);
+            cmt.Execute();
+            Employee e = PayrollDatabase.GetEmployee(empId);
+            Assert.NotNull(e);
+            Affiliation affiliation = e.Affiliation;
+            Assert.NotNull(affiliation);
+            Assert.True(affiliation is UnionAffiliation);
+            UnionAffiliation uf = affiliation as UnionAffiliation;
+            Assert.Equal(99.42, uf.Dues, 3);
+            Employee member = PayrollDatabase.GetUnionMember(memberId);
+            Assert.NotNull(member);
+            Assert.Equal(e, member);
+        }
     }
 }
